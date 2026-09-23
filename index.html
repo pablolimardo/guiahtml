@@ -154,6 +154,14 @@ main{max-width:62rem;margin-inline:auto;padding:0 clamp(1rem,4vw,2rem) 4rem}
 .tabs [role="tab"][aria-selected="true"]{background:#0e1535;color:#00ff88;border-color:rgba(0,217,255,.3)}
 .tabs .code{margin-top:0;border-top-left-radius:0}
 
+/* Botón Drive + kit */
+.kit{display:grid;gap:1rem;align-items:center;background:var(--bg2);border:1px solid var(--borde);border-radius:16px;padding:1.1rem;margin:1rem 0}
+@media (min-width:44rem){.kit{grid-template-columns:1fr auto}}
+.kit ul{margin:.3rem 0 0;padding-left:1.2rem;font-size:.95rem}
+.btn-drive{display:inline-flex;align-items:center;gap:.6rem;justify-content:center;text-decoration:none;font-weight:700;background:var(--acento);color:var(--sobre-acento);border-radius:14px;padding:.9rem 1.3rem;box-shadow:0 0 18px color-mix(in srgb,var(--acento) 45%,transparent);transition:transform .2s}
+.btn-drive:hover{transform:translateY(-2px)}
+.btn-drive span{font-size:1.4rem}
+
 /* Tablas */
 .tabla-wrap{overflow-x:auto;margin:1rem 0;border-radius:12px;border:1px solid var(--borde)}
 table{border-collapse:collapse;width:100%;min-width:32rem;background:var(--bg2);font-size:.92rem}
@@ -288,7 +296,7 @@ footer{text-align:center;color:var(--txt2);font-size:.85rem;padding:2rem 1rem;bo
     <li><a href="#m0">M0 · Banco de trabajo</a></li>
     <li><a href="#m1">M1 · Esqueleto</a></li>
     <li><a href="#m2">M2 · Cajas con nombre</a></li>
-    <li><a href="#m3">M3 · Contenido</a></li>
+    <li><a href="#m3">M3 · Contenido e imágenes</a></li>
     <li><a href="#m4">M4 · Pintar con CSS</a></li>
     <li><a href="#m5">M5 · La caja</a></li>
     <li><a href="#m6">M6 · Responsive</a></li>
@@ -323,11 +331,14 @@ footer{text-align:center;color:var(--txt2);font-size:.85rem;padding:2rem 1rem;bo
 │   └── 🎨 estilos.css ← el diseño
 ├── 📁 js/
 │   └── ⚙️ app.js       ← el cerebro
-└── 📁 img/
-    └── 🖼️ prototipo.jpg</div>
+└── 📁 img/            ← acá va el kit de imágenes (M3)
+    ├── 🖼️ tanque.png
+    ├── 🖼️ sistema.png
+    ├── 🖼️ sensor.png
+    └── 🖼️ esquema.jpg</div>
   <div class="tip"><strong>💡 Herramienta recomendada</strong>VS Code + la extensión <em>Live Server</em>. Clic derecho en <code>index.html</code> → "Open with Live Server". Cada vez que guardás, el navegador se actualiza solo.</div>
   <div class="ojo"><strong>⚠️ Regla de oro de los nombres</strong>Todo en minúsculas, sin espacios, sin tildes ni ñ. <code>foto-prototipo.jpg</code> ✅ · <code>Foto Prototipo Ñandú.JPG</code> ❌</div>
-  <div class="desafio"><strong>🎯 Mini-desafío</strong>Creá la carpeta <code>proyecto-expo</code> con sus 3 subcarpetas y los 3 archivos vacíos. Copiá una foto de tu prototipo dentro de <code>img</code>.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>Creá la carpeta <code>proyecto-expo</code> con sus 3 subcarpetas y los 3 archivos vacíos. Si ya tenés fotos de tu prototipo, copialas dentro de <code>img</code>.</div>
   <button class="cumplida" type="button" data-m="m0"></button>
 </section>
 
@@ -404,7 +415,7 @@ footer{text-align:center;color:var(--txt2);font-size:.85rem;padding:2rem 1rem;bo
 
 <!-- ================= M3 ================= -->
 <section class="mision" id="m3">
-  <div class="mision-head"><span class="num">M3</span><div class="t"><h2>Cargá el contenido</h2><small>≈ 20 min · HTML</small></div></div>
+  <div class="mision-head"><span class="num">M3</span><div class="t"><h2>Cargá el contenido y las imágenes</h2><small>≈ 35 min · HTML</small></div></div>
   <p class="prosa">Con estas 7 etiquetas armás el 90% de la web de tu proyecto. Son tus piezas de LEGO básicas.</p>
   <div class="tabla-wrap"><table>
     <thead><tr><th>Etiqueta</th><th>Para qué sirve</th><th>Ejemplo en tu proyecto</th></tr></thead>
@@ -427,7 +438,7 @@ footer{text-align:center;color:var(--txt2);font-size:.85rem;padding:2rem 1rem;bo
   </p>
 
   <!-- alt: describe la imagen para quien no la puede ver. ¡Obligatorio! -->
-  <img src="img/prototipo.jpg" alt="Maqueta del tanque con el sensor ultrasónico en la tapa">
+  <img src="img/tanque.png" alt="Tanque de agua con el sensor ultrasónico en la tapa">
 
   <h3>Materiales</h3>
   <ul>
@@ -440,8 +451,99 @@ footer{text-align:center;color:var(--txt2);font-size:.85rem;padding:2rem 1rem;bo
   <a href="https://github.com/tu-usuario/aquacontrol" target="_blank">Ver el código en GitHub</a>
 </section>
 </textarea></div>
+  <h3>📥 Kit de imágenes del proyecto</h3>
+  <p class="prosa">Te dejamos imágenes de referencia listas para usar en la plantilla. Descargalas y guardalas en tu carpeta <code>img</code>.</p>
+  <div class="kit">
+    <div>
+      <strong>Qué trae el kit y dónde va cada una:</strong>
+      <ul>
+        <li><code>tanque.png</code> → la portada (hero)</li>
+        <li><code>sistema.png</code> → la sección "Cómo funciona"</li>
+        <li><code>sensor.png</code> → la sección "Materiales"</li>
+        <li><code>esquema.jpg</code> → el esquema de conexiones</li>
+      </ul>
+    </div>
+    <a class="btn-drive" href="https://drive.google.com/drive/folders/1TAYdSjPtI6t1nP5CHkr1DyqvUjzkDRlq?usp=sharing" target="_blank" rel="noopener"><span>📥</span> Descargar el kit desde Drive</a>
+  </div>
+  <p class="prosa"><strong>Cómo bajarlas todas juntas:</strong> en Drive, seleccioná todas las imágenes con <code>Ctrl + A</code> → clic derecho → <strong>Descargar</strong>. Te baja un <code>.zip</code>: descomprimilo y mové las imágenes a <code>proyecto-expo/img</code>.</p>
+  <div class="ojo"><strong>⚠️ Trampa de las extensiones</strong>Algunos archivos pueden venir como <code>sensor.jpg.png</code>. La extensión real es la <strong>última</strong> (<code>.png</code>). Renombralos a <code>sensor.png</code>, <code>tanque.png</code> y <code>sistema.png</code>. En Windows activá <strong>Vista → Mostrar → Extensiones de nombre de archivo</strong> para ver el nombre completo. Es el mismo cuidado que con un <code>.py</code> que se guardó como <code>.py.txt</code>.</div>
+
+  <h3>La etiqueta &lt;img&gt; a fondo</h3>
+  <div class="analogia"><strong>🧩 Analogía</strong><code>&lt;img&gt;</code> no "contiene" la imagen: es un <strong>cartel que dice dónde buscarla</strong>. Como en el código de Arduino cuando ponés el número de pin: el sensor no está en el código, el código dice dónde está conectado.</div>
+  <div class="code" data-lang="html" data-title="una imagen bien configurada"><textarea hidden>
+<!-- img NO se cierra: todo se configura con atributos -->
+<img
+  src="img/tanque.png"
+  alt="Tanque de agua con el sensor ultrasónico instalado en la tapa"
+  width="800"
+  height="600"
+  loading="lazy">
+</textarea></div>
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Atributo</th><th>Qué hace</th><th>Si lo olvidás…</th></tr></thead>
+    <tbody>
+      <tr><td><code>src</code></td><td>La ruta al archivo: dónde está la imagen.</td><td>Aparece el ícono de imagen rota.</td></tr>
+      <tr><td><code>alt</code></td><td>Describe la imagen con palabras. Lo lee un lector de pantalla y aparece si la imagen no carga.</td><td>Tu web deja afuera a personas con discapacidad visual y Google no entiende la imagen.</td></tr>
+      <tr><td><code>width</code> y <code>height</code></td><td>Le avisan al navegador la proporción, para que reserve el lugar antes de cargar.</td><td>La página "salta" mientras carga, sobre todo en el celu.</td></tr>
+      <tr><td><code>loading="lazy"</code></td><td>Carga la imagen recién cuando te acercás scrolleando.</td><td>El celu descarga todo de una y tarda más. <strong>En la portada no lo uses</strong>: esa tiene que aparecer ya.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tip"><strong>💡 ¿Cómo sé el ancho y el alto?</strong>Clic derecho sobre el archivo → <strong>Propiedades → Detalles</strong>. O abrila en el navegador y mirá la pestaña. No tiene que ser exacto: lo que importa es la proporción. El CSS después la adapta a la pantalla.</div>
+  <div class="tip"><strong>💡 Un buen <code>alt</code></strong>Describí lo que se ve y por qué importa. <code>alt="imagen1"</code> ❌ · <code>alt="foto"</code> ❌ · <code>alt="Sensor ultrasónico HC-SR04 con sus cuatro pines de conexión"</code> ✅</div>
+
+  <h3>Rutas: la dirección de la imagen</h3>
+  <p class="prosa">La ruta se lee <strong>desde donde está el archivo que la usa</strong>. Es como darle indicaciones a alguien parado en tu <code>index.html</code>.</p>
+  <div class="code" data-lang="html" data-title="tipos de ruta"><textarea hidden>
+<!-- ✅ Relativa: "desde acá, entrá a la carpeta img" (la que vamos a usar) -->
+<img src="img/tanque.png" alt="...">
+
+<!-- ✅ Desde el CSS (que está en css/): "salí una carpeta con ../ y entrá a img" -->
+<!-- background-image: url("../img/esquema.jpg"); -->
+
+<!-- ❌ Ruta de TU compu: en otra compu o en internet no existe -->
+<img src="C:/Users/Juan/Escritorio/tanque.png" alt="...">
+
+<!-- ❌ Link de Drive: es una PÁGINA de Drive, no la imagen. Descargala -->
+<img src="https://drive.google.com/file/d/..." alt="...">
+</textarea></div>
+
+  <h3>Imagen con epígrafe: &lt;figure&gt;</h3>
+  <p class="prosa">Para esquemas y diagramas, envolvé la imagen en <code>&lt;figure&gt;</code> y agregá un <code>&lt;figcaption&gt;</code>: el texto que la explica debajo, como en un libro técnico.</p>
+  <div class="code" data-lang="html" data-title="index.html"><textarea hidden>
+<figure>
+  <img src="img/esquema.jpg"
+       alt="Esquema de conexiones entre el sensor, la placa de control y el relé"
+       width="1200" height="800" loading="lazy">
+  <figcaption>Esquema de conexiones del sistema.</figcaption>
+</figure>
+</textarea></div>
+  <p class="prosa">Y en el CSS, tres reglas que toda imagen necesita:</p>
+  <div class="code" data-lang="css" data-title="css/estilos.css"><textarea hidden>
+img {
+  max-width: 100%;   /* nunca más ancha que su caja: clave en el celu */
+  height: auto;      /* mantiene la proporción, no se deforma */
+  display: block;    /* saca un espacio fantasma que queda debajo */
+}
+
+/* La portada con un recorte prolijo */
+.hero img {
+  aspect-ratio: 4 / 3;   /* marco de proporción fija */
+  object-fit: cover;     /* llena el marco recortando, sin estirar */
+  border-radius: 14px;
+}
+</textarea></div>
+  <div class="analogia"><strong>🧩 object-fit: cover</strong>Es como poner una foto en un portarretratos: si no entra justa, se recorta un poco el borde, pero nunca queda estirada ni aplastada.</div>
+
   <div class="ojo"><strong>⚠️ Error clásico</strong>La foto no aparece. Casi siempre es la ruta: fijate que el nombre en <code>src</code> sea idéntico al del archivo, mayúsculas incluidas.</div>
-  <div class="desafio"><strong>🎯 Mini-desafío</strong>Completá la sección "problema" con <strong>tu</strong> problema real en 2 o 3 oraciones, la foto de tu prototipo con un buen <code>alt</code> y la lista de materiales.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>
+    <ol>
+      <li>Descargá el kit, renombrá los archivos y guardalos en <code>img</code>.</li>
+      <li>Poné <code>tanque.png</code> en la portada con un <code>alt</code> escrito por vos (sin <code>loading="lazy"</code>).</li>
+      <li>Agregá <code>esquema.jpg</code> dentro de un <code>&lt;figure&gt;</code> con su <code>&lt;figcaption&gt;</code>.</li>
+      <li>Completá la sección "problema" con <strong>tu</strong> problema real en 2 o 3 oraciones y la lista de materiales.</li>
+      <li><strong>Prueba de fuego:</strong> cambiá a propósito una letra del <code>src</code>. ¿Qué se ve? ¿Aparece tu <code>alt</code>? Después arreglalo.</li>
+    </ol>
+  </div>
   <button class="cumplida" type="button" data-m="m3"></button>
 </section>
 
@@ -824,8 +926,9 @@ h2 { color: var(--acento); margin: .5rem 0; }
         <p>Un sensor mide el nivel, el Arduino lo lee y Python decide cuándo prender la bomba.</p>
         <a class="boton" href="#panel">Ver el panel en vivo</a>
       </div>
-      <!-- Reemplazá por la foto de TU prototipo -->
-      <img src="img/prototipo.jpg" alt="Maqueta del tanque con el sensor en la tapa" width="800" height="600">
+      <!-- Imagen del kit. Cuando tengas la foto de TU prototipo, reemplazala -->
+      <!-- Sin loading="lazy": la portada tiene que verse al instante -->
+      <img src="img/tanque.png" alt="Tanque de agua con el sensor ultrasónico en la tapa" width="800" height="600">
     </section>
 
     <!-- ===== PROBLEMA ===== -->
@@ -837,6 +940,10 @@ h2 { color: var(--acento); margin: .5rem 0; }
     <!-- ===== CÓMO FUNCIONA ===== -->
     <section id="funciona">
       <h2>Cómo funciona</h2>
+      <figure>
+        <img src="img/sistema.png" alt="Vista general del sistema: sensor, control y bomba conectados al tanque" width="1200" height="800" loading="lazy">
+        <figcaption>El sistema completo, de la medición a la acción.</figcaption>
+      </figure>
       <div class="grilla">
         <article class="tarjeta">
           <div class="tarjeta-in">
@@ -857,6 +964,10 @@ h2 { color: var(--acento); margin: .5rem 0; }
           </div>
         </article>
       </div>
+      <figure>
+        <img src="img/esquema.jpg" alt="Esquema de conexiones entre el sensor, la placa de control y el relé" width="1200" height="800" loading="lazy">
+        <figcaption>Esquema de conexiones.</figcaption>
+      </figure>
     </section>
 
     <!-- ===== PANEL (JS) ===== -->
@@ -876,6 +987,11 @@ h2 { color: var(--acento); margin: .5rem 0; }
     <!-- ===== MATERIALES ===== -->
     <section id="materiales">
       <h2>Materiales</h2>
+      <div class="materiales">
+        <figure>
+          <img src="img/sensor.png" alt="Sensor ultrasónico HC-SR04 con sus cuatro pines de conexión" width="800" height="800" loading="lazy">
+          <figcaption>El sensor ultrasónico HC-SR04.</figcaption>
+        </figure>
       <ul class="lista">
         <li>Arduino UNO</li>
         <li>Sensor ultrasónico HC-SR04</li>
@@ -883,6 +999,7 @@ h2 { color: var(--acento); margin: .5rem 0; }
         <li>Python + pyFirmata</li>
         <li>HTML, CSS y JavaScript</li>
       </ul>
+      </div>
     </section>
 
     <!-- ===== EQUIPO ===== -->
@@ -1120,7 +1237,32 @@ h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
 
 input[type="range"] { width: 100%; accent-color: var(--acento); }
 
-/* 7) MATERIALES Y EQUIPO */
+/* 7) IMÁGENES CON EPÍGRAFE */
+figure { margin: var(--espacio) 0; }
+
+figcaption {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.hero img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;   /* recorta como un portarretratos, sin deformar */
+}
+
+/* MATERIALES Y EQUIPO */
+.materiales {
+  display: grid;
+  gap: var(--espacio);
+  align-items: center;
+}
+
+.materiales figure {
+  margin: 0 auto;
+  max-width: 22rem;
+}
 .lista {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
@@ -1156,6 +1298,7 @@ input[type="range"] { width: 100%; accent-color: var(--acento); }
   .menu { justify-content: flex-end; }
   .hero  { grid-template-columns: 1.2fr 1fr; }
   .panel { grid-template-columns: 10rem 1fr; align-items: center; }
+  .materiales { grid-template-columns: 1fr 1.4fr; }
 }
 
 /* 9) Accesibilidad: si la persona pidió menos animaciones */
@@ -1223,7 +1366,7 @@ document.querySelector("#anio").textContent = new Date().getFullYear();
   </div>
   <div class="desafio"><strong>🎯 La misión grande</strong>
     <ol>
-      <li>Copiá los 3 archivos en tu carpeta <code>proyecto-expo</code>.</li>
+      <li>Copiá los 3 archivos en tu carpeta <code>proyecto-expo</code> y verificá que el kit de imágenes esté en <code>img</code> (<a href="https://drive.google.com/drive/folders/1TAYdSjPtI6t1nP5CHkr1DyqvUjzkDRlq?usp=sharing" target="_blank" rel="noopener">descargalo acá</a> si te falta).</li>
       <li>Cambiá TODO el contenido por el de tu proyecto: nombre, problema, las 3 etapas, materiales y equipo.</li>
       <li>Elegí tu paleta en <code>:root</code>.</li>
       <li>Adaptá el panel a lo que mide tu sensor.</li>
@@ -1273,7 +1416,7 @@ document.querySelector("#anio").textContent = new Date().getFullYear();
     <li><label><input type="checkbox" id="c2"><span>Tiene el <code>meta viewport</code> y <code>lang="es"</code>.</span></label></li>
     <li><label><input type="checkbox" id="c3"><span>Usa header, nav, main, section y footer.</span></label></li>
     <li><label><input type="checkbox" id="c4"><span>Explica el problema real en pocas oraciones claras.</span></label></li>
-    <li><label><input type="checkbox" id="c5"><span>Tiene foto del prototipo con <code>alt</code> descriptivo.</span></label></li>
+    <li><label><input type="checkbox" id="c5"><span>Todas las imágenes cargan y tienen <code>alt</code> descriptivo, <code>width</code> y <code>height</code>.</span></label></li>
     <li><label><input type="checkbox" id="c6"><span>Usa variables de color con la paleta del proyecto.</span></label></li>
     <li><label><input type="checkbox" id="c7"><span>Se ve bien a 360 px, sin scroll horizontal.</span></label></li>
     <li><label><input type="checkbox" id="c8"><span>Tiene al menos una interacción con JavaScript.</span></label></li>
