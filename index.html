@@ -1,0 +1,1487 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tu proyecto en vidriera · HTML, CSS y JS · Taller de Programación 3° ACPI</title>
+<meta name="description" content="Guía TDA para crear la web responsiva del proyecto de Expotécnica con HTML, CSS y JavaScript.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* ================= TOKENS ================= */
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#eef2f6; --bg2:#ffffff; --panel:rgba(255,255,255,.78); --borde:rgba(0,110,70,.2);
+  --txt:#0f1a2e; --txt2:#4a5872; --acento:#00b36b; --acento-txt:#00794a; --cyan:#0070a0;
+  --alerta:#c62845; --amarillo:#8f5d00; --sombra:0 10px 30px rgba(15,26,46,.08);
+  --linea:rgba(15,26,46,.05); --sobre-acento:#04140c;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a0e27; --bg2:#10163a; --panel:rgba(18,26,64,.6); --borde:rgba(0,255,136,.16);
+    --txt:#e6edf7; --txt2:#9fb0cf; --acento:#00ff88; --acento-txt:#00ff88; --cyan:#00d9ff;
+    --alerta:#ff5c7a; --amarillo:#ffd166; --sombra:0 10px 40px rgba(0,0,0,.35);
+    --linea:rgba(0,255,136,.035); --sobre-acento:#04140c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a0e27; --bg2:#10163a; --panel:rgba(18,26,64,.6); --borde:rgba(0,255,136,.16);
+  --txt:#e6edf7; --txt2:#9fb0cf; --acento:#00ff88; --acento-txt:#00ff88; --cyan:#00d9ff;
+  --alerta:#ff5c7a; --amarillo:#ffd166; --sombra:0 10px 40px rgba(0,0,0,.35);
+  --linea:rgba(0,255,136,.035); --sobre-acento:#04140c;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 5rem)}
+body{
+  margin:0;background:var(--bg);color:var(--txt);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:1.0625rem;line-height:1.65;
+  background-image:linear-gradient(var(--linea) 1px,transparent 1px),linear-gradient(90deg,var(--linea) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+h1,h2,h3{font-family:Orbitron,"IBM Plex Sans",system-ui,sans-serif;line-height:1.15;letter-spacing:.01em}
+h2{font-size:clamp(1.35rem,4vw,1.9rem);margin:0}
+h3{font-size:1.05rem;margin:1.6rem 0 .4rem;color:var(--acento-txt)}
+p{margin:.6rem 0}
+a{color:var(--cyan)}
+code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.9em;background:color-mix(in srgb,var(--acento) 12%,transparent);padding:.05em .35em;border-radius:5px}
+img{max-width:100%;height:auto;display:block}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+
+/* ================= PROGRESO + CABECERA ================= */
+.progreso{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);pointer-events:none}
+.progreso i{display:block;height:4px;width:0;background:linear-gradient(90deg,var(--acento),var(--cyan));box-shadow:0 0 12px var(--acento)}
+.top{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:40;
+  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+  padding:.6rem clamp(1rem,4vw,2rem);
+  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--borde);
+}
+.marca{font-family:Orbitron,sans-serif;font-weight:800;font-size:.9rem;color:var(--txt);text-decoration:none;margin-inline-end:auto}
+.marca span{color:var(--acento-txt)}
+.xp{display:flex;align-items:center;gap:.5rem;font-size:.8rem;font-family:"JetBrains Mono",monospace;color:var(--txt2)}
+.xp-bar{width:5.5rem;height:8px;border-radius:99px;background:color-mix(in srgb,var(--txt2) 25%,transparent);overflow:hidden}
+.xp-bar i{display:block;height:100%;width:0;background:var(--acento);transition:width .4s}
+.xp b{color:var(--acento-txt)}
+.btn-icono{border:1px solid var(--borde);background:var(--bg2);color:var(--txt);border-radius:99px;padding:.3rem .7rem;font-size:.95rem}
+
+/* ================= LAYOUT ================= */
+main{max-width:62rem;margin-inline:auto;padding:0 clamp(1rem,4vw,2rem) 4rem}
+.prosa{max-width:68ch}
+
+/* HERO */
+.hero{padding-block:clamp(2.5rem,8vw,4.5rem) 1rem}
+.hero .kicker{font-family:"JetBrains Mono",monospace;color:var(--acento-txt);font-size:.9rem;margin:0}
+.hero h1{font-size:clamp(2.1rem,8vw,4.2rem);margin:.4rem 0 .8rem;font-weight:800}
+.hero h1 em{font-style:normal;display:block;font-size:.45em;font-weight:600;color:var(--txt2);margin-top:.4rem}
+.objetivo{font-size:1.15rem;border-left:4px solid var(--acento);padding:.2rem 0 .2rem 1rem;max-width:60ch}
+
+/* Demo de capas */
+.capas{display:grid;gap:1.25rem;margin-top:2rem;background:var(--panel);border:1px solid var(--borde);border-radius:20px;padding:clamp(1rem,3vw,1.75rem);box-shadow:var(--sombra);backdrop-filter:blur(8px)}
+@media (min-width:46rem){.capas{grid-template-columns:1fr 1.1fr;align-items:center}}
+.switches{display:grid;gap:.6rem}
+.sw{display:flex;align-items:center;gap:.8rem;text-align:start;border:1px solid var(--borde);background:var(--bg2);color:var(--txt);border-radius:14px;padding:.7rem .9rem}
+.sw .led{width:14px;height:14px;border-radius:50%;background:color-mix(in srgb,var(--txt2) 40%,transparent);flex:none;transition:.25s}
+.sw[aria-pressed="true"] .led{background:var(--acento);box-shadow:0 0 10px var(--acento)}
+.sw b{font-family:"JetBrains Mono",monospace}
+.sw small{display:block;color:var(--txt2);font-size:.85rem}
+.sw[disabled]{cursor:default;opacity:.9}
+.capa-txt{min-height:3.2em;margin:.4rem 0 0;color:var(--txt2);font-size:.95rem}
+
+.demo{border-radius:14px;padding:1.2rem;min-height:15rem;display:grid;place-items:center;border:1px dashed var(--borde);transition:background .3s}
+.demo[data-css="0"]{background:#fff;color:#000;font-family:"Times New Roman",serif;place-items:start}
+.demo[data-css="0"] .demo-card,.demo[data-css="0"] .demo-card *{all:revert}
+.demo[data-css="1"]{background:radial-gradient(circle at 30% 20%,#12306b,#070b1f)}
+.demo-card{width:min(100%,19rem);color:#e6edf7;background:rgba(255,255,255,.06);border:1px solid rgba(0,217,255,.35);border-radius:18px;padding:1.2rem;font-family:"IBM Plex Sans",sans-serif;box-shadow:0 0 30px rgba(0,217,255,.15)}
+.demo-card h3{margin:0 0 .3rem;color:#00d9ff;font-family:Orbitron,sans-serif;font-size:1.1rem}
+.demo-card p{margin:.3rem 0;color:#b8c6e3}
+.demo-card .demo-nivel{color:#00ff88;font-size:1.6rem;font-family:Orbitron,sans-serif}
+.demo-btn{margin-top:.6rem;width:100%;border:0;border-radius:99px;padding:.7rem;background:#00ff88;color:#04140c;font-weight:700}
+.demo-card.bomba-on{border-color:#00ff88;box-shadow:0 0 30px rgba(0,255,136,.35)}
+.demo-msg{min-height:1.4em;font-size:.9rem}
+
+/* Mapa de misiones */
+.mapa{display:flex;flex-wrap:wrap;gap:.5rem;margin:2rem 0 0;padding:0;list-style:none}
+.mapa a{display:inline-block;text-decoration:none;font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--txt);border:1px solid var(--borde);background:var(--bg2);border-radius:99px;padding:.3rem .75rem}
+.mapa a:hover{border-color:var(--acento)}
+
+/* Nota docente */
+.profe{margin-top:2rem;border:1px solid var(--borde);border-radius:16px;background:var(--bg2);padding:.2rem 1.2rem}
+.profe summary{cursor:pointer;font-weight:700;padding:.8rem 0}
+.profe ol{padding-left:1.2rem}
+.profe li{margin:.35rem 0}
+
+/* MISIONES */
+.mision{position:relative;margin-block:2.5rem;padding:clamp(1.1rem,3.5vw,2rem);background:var(--panel);border:1px solid var(--borde);border-radius:20px;box-shadow:var(--sombra);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.mision-head{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.6rem}
+.num{font-family:Orbitron,sans-serif;font-weight:800;font-size:1.05rem;color:var(--sobre-acento);background:var(--acento);border-radius:12px;min-width:3rem;height:3rem;display:grid;place-items:center;flex:none}
+.mision-head .t{flex:1 1 14rem}
+.mision-head small{display:block;color:var(--txt2);font-family:"JetBrains Mono",monospace;font-size:.8rem}
+.bonus .num{background:var(--amarillo)}
+
+.analogia,.tip,.ojo,.desafio{border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0}
+.analogia{background:color-mix(in srgb,var(--cyan) 10%,transparent);border:1px solid color-mix(in srgb,var(--cyan) 30%,transparent)}
+.tip{background:color-mix(in srgb,var(--acento) 9%,transparent);border:1px solid color-mix(in srgb,var(--acento) 25%,transparent)}
+.ojo{background:color-mix(in srgb,var(--alerta) 9%,transparent);border:1px solid color-mix(in srgb,var(--alerta) 30%,transparent)}
+.desafio{background:color-mix(in srgb,var(--amarillo) 11%,transparent);border-left:5px solid var(--amarillo)}
+.desafio strong:first-child,.analogia strong:first-child,.tip strong:first-child,.ojo strong:first-child{display:block;margin-bottom:.2rem}
+.desafio ol,.desafio ul{margin:.3rem 0;padding-left:1.2rem}
+
+.cumplida{margin-top:1.2rem;border:1px dashed var(--acento);background:transparent;color:var(--acento-txt);border-radius:99px;padding:.5rem 1rem;font-weight:600}
+.cumplida.on{background:var(--acento);color:var(--sobre-acento);border-style:solid}
+
+/* CÓDIGO */
+.code{margin:1rem 0;border-radius:12px;overflow:hidden;background:#070b1f;border:1px solid rgba(0,217,255,.2)}
+.code-bar{display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.35rem .5rem .35rem .8rem;background:#0e1535;font:600 .78rem "JetBrains Mono",monospace;color:#9fb0cf}
+.copiar{border:1px solid rgba(0,255,136,.35);background:transparent;color:#00ff88;border-radius:8px;padding:.2rem .6rem;font:600 .75rem "JetBrains Mono",monospace}
+.code pre{margin:0;padding:1rem;overflow-x:auto;font:.84rem/1.6 "JetBrains Mono",ui-monospace,monospace;color:#d6e2ff;tab-size:2}
+.code pre code{background:none;padding:0;font-size:inherit}
+.t-com{color:#7083a8;font-style:italic}.t-tag{color:#00d9ff}.t-attr{color:#ffd166}.t-str{color:#00ff88}
+.t-kw{color:#ff7ac6}.t-num{color:#ffb86c}.t-prop{color:#8be9fd}
+
+/* Tabs */
+.tabs [role="tablist"]{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1rem}
+.tabs [role="tab"]{border:1px solid var(--borde);background:var(--bg2);color:var(--txt);border-radius:10px 10px 0 0;padding:.45rem .9rem;font:600 .82rem "JetBrains Mono",monospace}
+.tabs [role="tab"][aria-selected="true"]{background:#0e1535;color:#00ff88;border-color:rgba(0,217,255,.3)}
+.tabs .code{margin-top:0;border-top-left-radius:0}
+
+/* Tablas */
+.tabla-wrap{overflow-x:auto;margin:1rem 0;border-radius:12px;border:1px solid var(--borde)}
+table{border-collapse:collapse;width:100%;min-width:32rem;background:var(--bg2);font-size:.92rem}
+th,td{padding:.6rem .8rem;text-align:start;border-bottom:1px solid var(--borde);vertical-align:top}
+th{font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--acento-txt)}
+td code{white-space:nowrap}
+
+/* Carpetas */
+.arbol{font-family:"JetBrains Mono",monospace;font-size:.88rem;background:var(--bg2);border:1px solid var(--borde);border-radius:12px;padding:1rem 1.2rem;line-height:1.8;overflow-x:auto;white-space:pre;margin:1rem 0}
+
+/* Diagrama semántico */
+.plano{display:grid;gap:6px;font-family:"JetBrains Mono",monospace;font-size:.8rem;margin:1rem 0;max-width:30rem}
+.plano div{border:2px dashed var(--borde);border-radius:10px;padding:.55rem .7rem;background:var(--bg2)}
+.plano .p-h{border-color:var(--cyan)}.plano .p-n{border-color:var(--cyan);margin-inline-start:1.5rem}
+.plano .p-m{border-color:var(--acento);display:grid;gap:6px}
+.plano .p-m div{border-color:color-mix(in srgb,var(--acento) 60%,transparent)}
+.plano .p-f{border-color:var(--amarillo)}
+
+/* Caja (box model) */
+.caja-demo{display:grid;place-items:center;margin:1rem 0}
+.bm{font-family:"JetBrains Mono",monospace;font-size:.78rem;text-align:center;width:min(100%,24rem)}
+.bm .m{border:2px dashed var(--amarillo);padding:1.1rem;border-radius:12px;position:relative}
+.bm .b{border:4px solid var(--cyan);border-radius:8px;padding:1.1rem;position:relative}
+.bm .pd{background:color-mix(in srgb,var(--acento) 16%,transparent);padding:1.1rem;border-radius:4px;position:relative}
+.bm .c{background:var(--bg2);border:1px solid var(--borde);padding:.8rem;border-radius:4px}
+.bm .lb{position:absolute;top:.1rem;left:.5rem;font-size:.7rem}
+.bm .m>.lb{color:var(--amarillo)}.bm .b>.lb{color:var(--cyan)}.bm .pd>.lb{color:var(--acento-txt)}
+
+/* Simulador responsive */
+.sim{margin:1.2rem 0;background:var(--bg2);border:1px solid var(--borde);border-radius:16px;padding:1rem}
+.sim-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-bottom:.8rem}
+.sim-ctrl input{flex:1 1 12rem;accent-color:var(--acento)}
+.sim-ctrl button{border:1px solid var(--borde);background:var(--bg);color:var(--txt);border-radius:10px;padding:.3rem .6rem;font-size:.85rem}
+.sim-out{font-family:"JetBrains Mono",monospace;font-size:.85rem;color:var(--acento-txt);min-width:11rem}
+.sim-marco{container-type:inline-size;width:960px;max-width:100%;margin-inline:auto;border:3px solid var(--txt2);border-radius:14px;overflow:hidden;background:#0b1020;color:#e8eefc;transition:width .3s}
+.sim-top{display:flex;align-items:center;gap:.8rem;padding:.6rem .9rem;border-bottom:1px solid rgba(0,200,255,.3);font-family:system-ui,sans-serif;font-size:.85rem}
+.sim-top b{margin-inline-end:auto}
+.sim-nav{display:flex;gap:.8rem;color:#9aa6c4}
+.sim-burger{display:none;font-size:1.2rem}
+.sim-body{padding:clamp(.8rem,4cqi,2rem);font-family:system-ui,sans-serif}
+.sim-h{font-size:clamp(1.2rem,6cqi,2.4rem);line-height:1.1;margin:0 0 .4rem;font-weight:800}
+.sim-p{font-size:.85rem;color:#9aa6c4;margin:0 0 1rem}
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:.7rem}
+.sim-card{background:#141b33;border:1px solid rgba(0,200,255,.25);border-radius:10px;padding:.8rem;font-size:.85rem}
+.sim-card span{font-size:1.5rem}
+@container (max-width:480px){.sim-nav{display:none}.sim-burger{display:block}}
+
+/* Tanque demo */
+.tq{display:grid;gap:1.2rem;background:var(--bg2);border:1px solid var(--borde);border-radius:16px;padding:1.2rem;margin:1rem 0}
+@media (min-width:40rem){.tq{grid-template-columns:9rem 1fr;align-items:center}}
+.tq-tanque{position:relative;width:min(100%,8rem);height:12rem;margin-inline:auto;border:3px solid var(--txt2);border-top:none;border-radius:0 0 14px 14px;overflow:hidden}
+.tq-agua{position:absolute;inset-inline:0;bottom:0;height:50%;background:linear-gradient(var(--cyan),#0050a0);transition:height .35s ease}
+.tq-estado{padding:.6rem .9rem;border-radius:12px;font-weight:700;margin:.5rem 0}
+.tq-estado.ok{background:color-mix(in srgb,var(--acento) 20%,transparent)}
+.tq-estado.alerta{background:color-mix(in srgb,var(--alerta) 22%,transparent)}
+.tq-estado.lleno{background:color-mix(in srgb,var(--cyan) 22%,transparent)}
+.tq input{width:100%;accent-color:var(--acento)}
+.tq label{font-size:.9rem;color:var(--txt2)}
+
+/* Laboratorio */
+.lab{display:grid;gap:.8rem;margin-top:1rem}
+@media (min-width:46rem){.lab-ed{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}}
+.lab label{display:block;font:600 .8rem "JetBrains Mono",monospace;color:var(--acento-txt);margin:.4rem 0 .2rem}
+.lab textarea{width:100%;min-height:13rem;resize:vertical;border-radius:12px;border:1px solid rgba(0,217,255,.25);background:#070b1f;color:#d6e2ff;font:.82rem/1.55 "JetBrains Mono",monospace;padding:.8rem;tab-size:2}
+.lab iframe{width:100%;height:20rem;border:3px solid var(--txt2);border-radius:14px;background:#fff}
+.lab-acc{display:flex;gap:.6rem;flex-wrap:wrap}
+.btn{border:0;border-radius:99px;padding:.55rem 1.1rem;background:var(--acento);color:var(--sobre-acento);font-weight:700}
+.btn.sec{background:var(--bg2);color:var(--txt);border:1px solid var(--borde)}
+
+/* Glosario + checklist */
+.glosario{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.7rem;margin:1rem 0;padding:0}
+.glosario div{background:var(--bg2);border:1px solid var(--borde);border-radius:12px;padding:.7rem .9rem}
+.glosario dt{font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--acento-txt)}
+.glosario dd{margin:.2rem 0 0;font-size:.93rem;color:var(--txt2)}
+#checklist{list-style:none;padding:0;margin:1rem 0;display:grid;gap:.45rem}
+#checklist label{display:flex;gap:.7rem;align-items:flex-start;background:var(--bg2);border:1px solid var(--borde);border-radius:12px;padding:.6rem .8rem;cursor:pointer}
+#checklist input{margin-top:.35rem;accent-color:var(--acento);width:1.1rem;height:1.1rem;flex:none}
+#checklist input:checked+span{color:var(--txt2);text-decoration:line-through}
+.ck-top{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.ck-top b{font-family:Orbitron,sans-serif;color:var(--acento-txt)}
+#ckMsg{font-weight:700;color:var(--acento-txt);min-height:1.5em}
+
+footer{text-align:center;color:var(--txt2);font-size:.85rem;padding:2rem 1rem;border-top:1px solid var(--borde)}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="progreso" aria-hidden="true"><i id="progresoBarra"></i></div>
+
+<header class="top">
+  <a class="marca" href="#inicio">ACPI · <span>Taller 3°</span></a>
+  <div class="xp" title="Tu experiencia en esta guía">
+    <span id="xpNivel">Aprendiz 🔧</span>
+    <div class="xp-bar"><i id="xpBarra"></i></div>
+    <b><span id="xpNum">0</span> XP</b>
+  </div>
+  <button class="btn-icono" id="btnTema" type="button" aria-label="Cambiar tema claro u oscuro">🌓</button>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="inicio">
+  <p class="kicker">Taller de Programación · 3° ACPI · Misión Expotécnica</p>
+  <h1>Tu proyecto en vidriera<em>HTML + CSS + JavaScript para mostrar lo que construiste</em></h1>
+  <p class="objetivo"><strong>Al terminar esta guía vas a poder</strong> armar la página web de tu proyecto, que se vea bien en el celu y en la compu, y que tenga al menos una parte interactiva.</p>
+
+  <div class="capas">
+    <div>
+      <p class="prosa" style="margin-top:0"><strong>Pensalo como un tablero de control.</strong> HTML es el gabinete con los componentes. CSS es el diseño del panel. JavaScript es el PLC que hace que todo reaccione. Probá: prendé las capas una por una.</p>
+      <div class="switches">
+        <button class="sw" type="button" data-k="html" aria-pressed="true" disabled><span class="led"></span><span><b>HTML</b> · la estructura<small>Siempre prendido: sin esqueleto no hay nada.</small></span></button>
+        <button class="sw" type="button" data-k="css" aria-pressed="false"><span class="led"></span><span><b>CSS</b> · el diseño<small>Colores, tamaños, forma, orden en la pantalla.</small></span></button>
+        <button class="sw" type="button" data-k="js" aria-pressed="false"><span class="led"></span><span><b>JS</b> · el cerebro<small>Hace que los botones hagan cosas.</small></span></button>
+      </div>
+      <p class="capa-txt" id="capaTxt" aria-live="polite">Solo HTML: el contenido está, pero parece un documento de 1995.</p>
+    </div>
+    <div class="demo" id="demo" data-css="0" data-js="0">
+      <div class="demo-card">
+        <h3>💧 Tanque Norte</h3>
+        <p>Nivel actual: <b class="demo-nivel">62%</b></p>
+        <p>Sensor ultrasónico conectado al Arduino.</p>
+        <button class="demo-btn" type="button">Encender bomba</button>
+        <p class="demo-msg" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <ul class="mapa" aria-label="Mapa de misiones">
+    <li><a href="#m0">M0 · Banco de trabajo</a></li>
+    <li><a href="#m1">M1 · Esqueleto</a></li>
+    <li><a href="#m2">M2 · Cajas con nombre</a></li>
+    <li><a href="#m3">M3 · Contenido</a></li>
+    <li><a href="#m4">M4 · Pintar con CSS</a></li>
+    <li><a href="#m5">M5 · La caja</a></li>
+    <li><a href="#m6">M6 · Responsive</a></li>
+    <li><a href="#m7">M7 · JavaScript</a></li>
+    <li><a href="#lab">Laboratorio</a></li>
+    <li><a href="#m8">M8 · Plantilla Expo</a></li>
+    <li><a href="#m9">M9 · Publicar</a></li>
+    <li><a href="#cierre">Cierre</a></li>
+  </ul>
+
+  <details class="profe">
+    <summary>🧑‍🏫 Plan de clase para el docente</summary>
+    <p><strong>Propósito:</strong> que cada grupo construya la web de su proyecto de Expotécnica con estructura semántica, diseño responsivo y una interacción en JavaScript. Retoma y consolida contenidos de Informática Aplicada.</p>
+    <p><strong>Duración sugerida:</strong> 2 clases de taller. Ajustable según el avance de cada grupo.</p>
+    <ol>
+      <li><strong>Clase 1 · Estructura y diseño.</strong> Gancho con el tablero de capas (10'). Misiones 0 a 3 en el pizarrón y en la compu (60'). Misiones 4 y 5 (40'). Cierre: 3 palabras nuevas al glosario personal.</li>
+      <li><strong>Clase 2 · Responsive y cerebro.</strong> Misión 6 con el simulador y el modo dispositivo del navegador (35'). Misión 7 comparando JS con Python (35'). Misión 8: cada grupo adapta la plantilla con los datos reales de su proyecto (60'). Prueba final en el celular de un compañero.</li>
+    </ol>
+    <p><strong>Recursos:</strong> VS Code con la extensión Live Server. Si no hay instalación, alcanza con cualquier editor de texto y el navegador. El Laboratorio de esta guía necesita internet solo para abrir la página.</p>
+    <p><strong>Evidencia de aprendizaje:</strong> la carpeta del sitio y el checklist "Web lista para la Expo" del cierre, que puede usarse como criterio de la rúbrica del proyecto.</p>
+    <p><strong>Articulación:</strong> fotos y diagramas del prototipo con Tecnología y Control; la lógica del panel se conecta con lo trabajado en Python y pyFirmata.</p>
+  </details>
+</section>
+
+<!-- ================= M0 ================= -->
+<section class="mision" id="m0">
+  <div class="mision-head"><span class="num">M0</span><div class="t"><h2>Armá tu banco de trabajo</h2><small>≈ 10 min · preparación</small></div></div>
+  <p class="prosa">Antes de soldar, se ordena el banco. En web es igual: una carpeta ordenada te ahorra horas de "¿dónde quedó la foto?".</p>
+  <div class="arbol">📁 proyecto-expo/
+├── 📄 index.html      ← la página (el esqueleto)
+├── 📁 css/
+│   └── 🎨 estilos.css ← el diseño
+├── 📁 js/
+│   └── ⚙️ app.js       ← el cerebro
+└── 📁 img/
+    └── 🖼️ prototipo.jpg</div>
+  <div class="tip"><strong>💡 Herramienta recomendada</strong>VS Code + la extensión <em>Live Server</em>. Clic derecho en <code>index.html</code> → "Open with Live Server". Cada vez que guardás, el navegador se actualiza solo.</div>
+  <div class="ojo"><strong>⚠️ Regla de oro de los nombres</strong>Todo en minúsculas, sin espacios, sin tildes ni ñ. <code>foto-prototipo.jpg</code> ✅ · <code>Foto Prototipo Ñandú.JPG</code> ❌</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>Creá la carpeta <code>proyecto-expo</code> con sus 3 subcarpetas y los 3 archivos vacíos. Copiá una foto de tu prototipo dentro de <code>img</code>.</div>
+  <button class="cumplida" type="button" data-m="m0"></button>
+</section>
+
+<!-- ================= M1 ================= -->
+<section class="mision" id="m1">
+  <div class="mision-head"><span class="num">M1</span><div class="t"><h2>El esqueleto de toda página</h2><small>≈ 15 min · HTML</small></div></div>
+  <p class="prosa">HTML trabaja con <strong>etiquetas</strong>. Una etiqueta abre <code>&lt;p&gt;</code>, envuelve contenido y cierra <code>&lt;/p&gt;</code>. Como una caja con tapa.</p>
+  <p class="prosa">Toda página arranca con el mismo esqueleto. Lo escribís una vez y lo reutilizás siempre, como el programa base del Arduino con <code>setup()</code> y <code>loop()</code>.</p>
+  <div class="code" data-lang="html" data-title="index.html"><textarea hidden>
+<!DOCTYPE html>
+<!-- lang="es": le avisa al navegador que la página está en español -->
+<html lang="es">
+<head>
+  <!-- El HEAD es la "ficha técnica": no se ve, pero configura todo -->
+  <meta charset="UTF-8">  <!-- para que se vean bien las tildes y la ñ -->
+
+  <!-- ⭐ CLAVE PARA EL CELU: usar el ancho real de la pantalla -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>AquaControl · Expotécnica</title>  <!-- el texto de la pestaña -->
+
+  <!-- Conectamos el diseño y el cerebro (los creamos más adelante) -->
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>  <!-- defer: espera a que cargue el HTML -->
+</head>
+<body>
+  <!-- El BODY es todo lo que se ve en pantalla -->
+  <h1>Hola, Expotécnica</h1>
+</body>
+</html>
+</textarea></div>
+  <div class="tip"><strong>💡 Atajo de VS Code</strong>En un archivo <code>.html</code> vacío escribí <code>!</code> y apretá Tab. Te arma el esqueleto solo. Después cambiá <code>lang="en"</code> por <code>lang="es"</code>.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>Pegá el esqueleto en tu <code>index.html</code>, cambiá el título por el nombre de tu proyecto y abrilo con Live Server. Si ves tu <code>h1</code>, ¡primera misión técnica superada!</div>
+  <button class="cumplida" type="button" data-m="m1"></button>
+</section>
+
+<!-- ================= M2 ================= -->
+<section class="mision" id="m2">
+  <div class="mision-head"><span class="num">M2</span><div class="t"><h2>Cajas con nombre (HTML semántico)</h2><small>≈ 15 min · HTML</small></div></div>
+  <div class="analogia"><strong>🧩 Analogía</strong>En un tablero eléctrico cada zona tiene su rótulo: "Alimentación", "Comando", "Salidas". Si todo dijera "caja", nadie entendería nada. HTML semántico es rotular cada zona de tu página con su nombre real.</div>
+  <div class="plano" aria-label="Plano de una página semántica">
+    <div class="p-h">&lt;header&gt; logo + menú</div>
+    <div class="p-n">&lt;nav&gt; los links del menú</div>
+    <div class="p-m">&lt;main&gt; lo importante
+      <div>&lt;section&gt; El problema</div>
+      <div>&lt;section&gt; Cómo funciona → &lt;article&gt; x3</div>
+      <div>&lt;section&gt; Equipo</div>
+    </div>
+    <div class="p-f">&lt;footer&gt; escuela, año, contacto</div>
+  </div>
+  <div class="code" data-lang="html" data-title="index.html · dentro del body"><textarea hidden>
+<header>
+  <a href="#inicio">💧 AquaControl</a>
+  <nav>
+    <a href="#problema">Problema</a>
+    <a href="#funciona">Cómo funciona</a>
+    <a href="#equipo">Equipo</a>
+  </nav>
+</header>
+
+<main>
+  <!-- id = la "dirección" de la sección. El menú salta hasta acá -->
+  <section id="problema">...</section>
+  <section id="funciona">...</section>
+  <section id="equipo">...</section>
+</main>
+
+<footer>EI N°9 "15 de Noviembre" · El Calafate</footer>
+</textarea></div>
+  <div class="tip"><strong>💡 ¿Por qué no usar todo con &lt;div&gt;?</strong>Funciona, pero Google, los lectores de pantalla y tu yo del futuro entienden mucho mejor una página rotulada.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>Armá en tu página las secciones de tu proyecto, con su <code>id</code>: <em>inicio, problema, funciona, materiales, equipo</em>. Probá que cada link del menú salte a su sección.</div>
+  <button class="cumplida" type="button" data-m="m2"></button>
+</section>
+
+<!-- ================= M3 ================= -->
+<section class="mision" id="m3">
+  <div class="mision-head"><span class="num">M3</span><div class="t"><h2>Cargá el contenido</h2><small>≈ 20 min · HTML</small></div></div>
+  <p class="prosa">Con estas 7 etiquetas armás el 90% de la web de tu proyecto. Son tus piezas de LEGO básicas.</p>
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Etiqueta</th><th>Para qué sirve</th><th>Ejemplo en tu proyecto</th></tr></thead>
+    <tbody>
+      <tr><td><code>&lt;h1&gt;</code> a <code>&lt;h3&gt;</code></td><td>Títulos, del más importante al menos</td><td>Un solo h1: el nombre del proyecto</td></tr>
+      <tr><td><code>&lt;p&gt;</code></td><td>Párrafo de texto</td><td>Explicar el problema</td></tr>
+      <tr><td><code>&lt;img&gt;</code></td><td>Imagen (no se cierra)</td><td>Foto del prototipo</td></tr>
+      <tr><td><code>&lt;a&gt;</code></td><td>Enlace</td><td>Link al repositorio o al video</td></tr>
+      <tr><td><code>&lt;ul&gt;</code> + <code>&lt;li&gt;</code></td><td>Lista con viñetas</td><td>Materiales usados</td></tr>
+      <tr><td><code>&lt;strong&gt;</code></td><td>Texto importante</td><td>Un dato clave</td></tr>
+      <tr><td><code>&lt;button&gt;</code></td><td>Botón (lo activa JS)</td><td>Prender la bomba simulada</td></tr>
+    </tbody>
+  </table></div>
+  <div class="code" data-lang="html" data-title="sección problema"><textarea hidden>
+<section id="problema">
+  <h2>El problema</h2>
+  <p>
+    En muchas casas de El Calafate el tanque se vacía sin aviso
+    o rebalsa y se <strong>desperdicia agua</strong>.
+  </p>
+
+  <!-- alt: describe la imagen para quien no la puede ver. ¡Obligatorio! -->
+  <img src="img/prototipo.jpg" alt="Maqueta del tanque con el sensor ultrasónico en la tapa">
+
+  <h3>Materiales</h3>
+  <ul>
+    <li>Arduino UNO</li>
+    <li>Sensor ultrasónico HC-SR04</li>
+    <li>Python + pyFirmata</li>
+  </ul>
+
+  <!-- target="_blank" abre el link en otra pestaña -->
+  <a href="https://github.com/tu-usuario/aquacontrol" target="_blank">Ver el código en GitHub</a>
+</section>
+</textarea></div>
+  <div class="ojo"><strong>⚠️ Error clásico</strong>La foto no aparece. Casi siempre es la ruta: fijate que el nombre en <code>src</code> sea idéntico al del archivo, mayúsculas incluidas.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>Completá la sección "problema" con <strong>tu</strong> problema real en 2 o 3 oraciones, la foto de tu prototipo con un buen <code>alt</code> y la lista de materiales.</div>
+  <button class="cumplida" type="button" data-m="m3"></button>
+</section>
+
+<!-- ================= M4 ================= -->
+<section class="mision" id="m4">
+  <div class="mision-head"><span class="num">M4</span><div class="t"><h2>Pintá el tablero con CSS</h2><small>≈ 20 min · CSS</small></div></div>
+  <p class="prosa">Una regla CSS tiene tres partes: <strong>a quién</strong> (selector), <strong>qué cambio</strong> (propiedad) y <strong>cuánto</strong> (valor).</p>
+  <div class="code" data-lang="css" data-title="la receta de una regla"><textarea hidden>
+/* selector { propiedad: valor; } */
+h1 {
+  color: #00c8ff;        /* color del texto */
+  font-size: 2.5rem;     /* tamaño: 1rem = el tamaño base de letra */
+}
+
+.boton {                 /* con punto: todo lo que tenga class="boton" */
+  background: #00c8ff;
+}
+
+#panel {                 /* con numeral: el elemento con id="panel" */
+  border: 2px solid #00c8ff;
+}
+</textarea></div>
+  <h3>El truco profesional: variables</h3>
+  <p class="prosa">Si repetís <code>#00c8ff</code> en 30 lugares y querés cambiar el color, tenés 30 cambios. Con una variable, cambiás una sola línea. Es como una constante en Python.</p>
+  <div class="code" data-lang="css" data-title="css/estilos.css"><textarea hidden>
+/* :root = la "sala de máquinas": acá se definen las variables */
+:root {
+  --fondo: #0b1020;
+  --texto: #e8eefc;
+  --acento: #00c8ff;   /* el color de TU proyecto */
+  --radio: 14px;       /* qué tan redondeadas son las esquinas */
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  background: var(--fondo);   /* var() = "usá el valor de la variable" */
+  color: var(--texto);
+  line-height: 1.6;           /* aire entre renglones: se lee mejor */
+}
+
+h1, h2 { color: var(--acento); }
+
+.boton {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;        /* forma de pastilla */
+  background: var(--acento);
+  color: #06101f;
+  text-decoration: none;       /* chau subrayado */
+  transition: transform 0.2s;  /* animación suave */
+}
+
+.boton:hover { transform: translateY(-3px); }  /* al pasar el mouse, sube */
+</textarea></div>
+  <div class="tip"><strong>💡 Paleta rápida</strong>Elegí <strong>un</strong> color de acento que tenga que ver con tu proyecto: celeste para agua, verde para invernadero, naranja para energía solar. Menos es más.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>Creá tus variables en <code>:root</code> con la paleta de tu proyecto. Hacé un botón con <code>class="boton"</code> y probá cambiar solo <code>--acento</code>: mirá cómo cambia todo junto.</div>
+  <button class="cumplida" type="button" data-m="m4"></button>
+</section>
+
+<!-- ================= M5 ================= -->
+<section class="mision" id="m5">
+  <div class="mision-head"><span class="num">M5</span><div class="t"><h2>Todo es una caja</h2><small>≈ 10 min · CSS</small></div></div>
+  <div class="analogia"><strong>🧩 Analogía</strong>Pensá en un Arduino que llega por correo. Está el <strong>producto</strong> (contenido), el <strong>telgopor</strong> que lo protege (padding), la <strong>caja de cartón</strong> (border) y el <strong>espacio</strong> entre esa caja y las otras del camión (margin).</div>
+  <div class="caja-demo">
+    <div class="bm"><div class="m"><span class="lb">margin</span><div class="b"><span class="lb">border</span><div class="pd"><span class="lb">padding</span><div class="c">contenido</div></div></div></div></div>
+  </div>
+  <div class="code" data-lang="css" data-title="css/estilos.css"><textarea hidden>
+/* ⭐ Siempre al principio: que el ancho incluya padding y borde.
+   Sin esto, las cajas "crecen" y se desarman los diseños */
+*, *::before, *::after { box-sizing: border-box; }
+
+.tarjeta {
+  padding: 1.25rem;                 /* telgopor adentro */
+  border: 1px solid #00c8ff;        /* la caja */
+  border-radius: 14px;
+  margin-block: 1rem;               /* espacio arriba y abajo */
+}
+</textarea></div>
+  <div class="tip"><strong>💡 Superpoder de detective</strong>Apretá <code>F12</code>, elegí la flechita y tocá cualquier elemento. El navegador te dibuja su caja con margin, border y padding en colores.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>Con <code>F12</code>, inspeccioná un título de esta misma guía y encontrá cuánto margen tiene. Después dale <code>padding</code> y <code>border</code> a las secciones de tu página.</div>
+  <button class="cumplida" type="button" data-m="m5"></button>
+</section>
+
+<!-- ================= M6 ================= -->
+<section class="mision" id="m6">
+  <div class="mision-head"><span class="num">M6</span><div class="t"><h2>Responsive: que se vea bien en cualquier pantalla</h2><small>≈ 35 min · CSS moderno</small></div></div>
+  <p class="prosa">En la Expo, la mayoría va a ver tu web desde el celular, escaneando un QR. Por eso trabajamos <strong>mobile first</strong>: primero el celu, después agrandamos.</p>
+  <div class="analogia"><strong>🧩 Analogía</strong>El agua toma la forma del recipiente. Una web responsiva es igual: el contenido se acomoda solo al tamaño de la pantalla, sin hacer una página distinta para cada aparato.</div>
+
+  <h3>Probalo vos: el simulador</h3>
+  <div class="sim">
+    <div class="sim-ctrl">
+      <input type="range" id="simAncho" min="260" max="960" value="960" aria-label="Ancho de la pantalla simulada">
+      <span class="sim-out" id="simOut" aria-live="polite">960px</span>
+      <button type="button" data-ancho="360">📱 360</button>
+      <button type="button" data-ancho="700">📟 700</button>
+      <button type="button" data-ancho="960">🖥️ 960</button>
+    </div>
+    <div class="sim-marco" id="simMarco">
+      <div class="sim-top"><b>💧 AquaControl</b><span class="sim-nav"><span>Problema</span><span>Panel</span><span>Equipo</span></span><span class="sim-burger" aria-hidden="true">☰</span></div>
+      <div class="sim-body">
+        <p class="sim-h">El agua del tanque, bajo control</p>
+        <p class="sim-p">El título y las tarjetas se acomodan solos. Mirá el menú cuando la pantalla se achica.</p>
+        <div class="sim-grid">
+          <div class="sim-card"><span>📡</span><br>Sensor</div>
+          <div class="sim-card"><span>🧠</span><br>Arduino</div>
+          <div class="sim-card"><span>🐍</span><br>Python</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Los 4 trucos que lo hacen posible</h3>
+  <p class="prosa"><strong>Truco 1 · Imágenes que no se escapan.</strong> Una foto de 4000 px nunca debe romper la pantalla del celu.</p>
+  <div class="code" data-lang="css" data-title="truco 1"><textarea hidden>
+img {
+  max-width: 100%;  /* nunca más ancha que su caja */
+  height: auto;     /* mantiene la proporción, no se deforma */
+  display: block;
+}
+</textarea></div>
+  <p class="prosa"><strong>Truco 2 · Letra fluida con <code>clamp()</code>.</strong> Le das un mínimo, un ideal y un máximo. Como un termostato: nunca baja ni sube de los límites.</p>
+  <div class="code" data-lang="css" data-title="truco 2"><textarea hidden>
+h1 {
+  /* clamp(MÍNIMO, IDEAL, MÁXIMO)
+     6vw = 6% del ancho de la pantalla */
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+</textarea></div>
+  <p class="prosa"><strong>Truco 3 · La grilla mágica.</strong> Una sola línea y las tarjetas se reacomodan solas: 3 por fila en la compu, 1 en el celu. Sin media queries.</p>
+  <div class="code" data-lang="css" data-title="truco 3 ⭐"><textarea hidden>
+.grilla {
+  display: grid;
+  /* "Poné todas las columnas que entren,
+     cada una de 16rem como mínimo, y repartí el espacio que sobre" */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1.5rem;   /* separación entre tarjetas */
+}
+</textarea></div>
+  <p class="prosa"><strong>Truco 4 · Consultas de tamaño.</strong> Con <code>@media</code> preguntás por el ancho de la <em>pantalla</em>. Con <code>@container</code>, por el ancho de <em>una caja</em>: la tarjeta decide sola cómo acomodarse.</p>
+  <div class="code" data-lang="css" data-title="truco 4"><textarea hidden>
+/* @media: "si la PANTALLA mide 48rem (≈768px) o más..." */
+@media (min-width: 48rem) {
+  .hero { grid-template-columns: 1.2fr 1fr; }  /* texto + foto lado a lado */
+}
+
+/* @container: la tarjeta se mide a sí misma */
+.tarjeta { container-type: inline-size; }
+
+@container (min-width: 22rem) {
+  /* si la TARJETA es ancha: ícono a la izquierda, texto a la derecha */
+  .tarjeta-in { grid-template-columns: auto 1fr; }
+}
+</textarea></div>
+  <div class="tip"><strong>💡 Probá en el celu sin tener celu</strong><code>F12</code> → ícono de celular/tablet (o <code>Ctrl + Shift + M</code>). Elegí "iPhone" o "Galaxy" y mirá tu página como la verá el jurado.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>
+    <ol>
+      <li>Aplicá los 4 trucos a tu página.</li>
+      <li>Poné las 3 partes de tu sistema (sensor, control, actuador) en una <code>.grilla</code>.</li>
+      <li>Probala en modo dispositivo a 360 px. Si no aparece barra de scroll horizontal, ¡superado!</li>
+    </ol>
+  </div>
+  <button class="cumplida" type="button" data-m="m6"></button>
+</section>
+
+<!-- ================= M7 ================= -->
+<section class="mision" id="m7">
+  <div class="mision-head"><span class="num">M7</span><div class="t"><h2>JavaScript: el cerebro de la página</h2><small>≈ 35 min · JS</small></div></div>
+  <p class="prosa">Buena noticia: ya sabés programar en Python. JavaScript piensa igual, solo cambia la forma de escribir. Mirá la traducción.</p>
+  <div class="tabla-wrap"><table>
+    <thead><tr><th>Qué querés hacer</th><th>Python 🐍</th><th>JavaScript ⚡</th></tr></thead>
+    <tbody>
+      <tr><td>Mostrar un mensaje</td><td><code>print("Hola")</code></td><td><code>console.log("Hola")</code></td></tr>
+      <tr><td>Variable</td><td><code>nivel = 50</code></td><td><code>let nivel = 50</code></td></tr>
+      <tr><td>Constante</td><td><code>NIVEL_MIN = 20</code></td><td><code>const NIVEL_MIN = 20</code></td></tr>
+      <tr><td>Condición</td><td><code>if nivel &lt; 20:</code></td><td><code>if (nivel &lt; 20) { }</code></td></tr>
+      <tr><td>Si no, si...</td><td><code>elif</code></td><td><code>else if</code></td></tr>
+      <tr><td>Función</td><td><code>def prender():</code></td><td><code>function prender() { }</code></td></tr>
+      <tr><td>Lista</td><td><code>[10, 20, 30]</code></td><td><code>[10, 20, 30]</code> (igual 😎)</td></tr>
+      <tr><td>Bloques</td><td>Sangría</td><td>Llaves <code>{ }</code></td></tr>
+    </tbody>
+  </table></div>
+  <h3>La receta de toda interacción: buscar, escuchar, reaccionar</h3>
+  <div class="analogia"><strong>🧩 Analogía</strong>Es un <code>loop()</code> de Arduino, pero al revés: en vez de preguntar todo el tiempo "¿apretaron el botón?", JS deja un <strong>sensor escuchando</strong> y reacciona solo cuando pasa algo. Eso es un <em>evento</em>.</div>
+  <div class="code" data-lang="js" data-title="los 3 pasos"><textarea hidden>
+// 1) BUSCAR el elemento en el HTML (como elegir un pin)
+const boton = document.querySelector("#btn-bomba");
+
+// 2) ESCUCHAR un evento: "cuando hagan clic..."
+boton.addEventListener("click", () => {
+  // 3) REACCIONAR: cambiamos el texto del botón
+  boton.textContent = "Bomba ENCENDIDA ✅";
+});
+</textarea></div>
+
+  <h3>Mini-SCADA: el panel del tanque</h3>
+  <p class="prosa">Mové el sensor simulado. La lógica es la misma que programarías en Python para prender o apagar la bomba.</p>
+  <div class="tq">
+    <div class="tq-tanque" aria-hidden="true"><div class="tq-agua" id="tqAgua"></div></div>
+    <div>
+      <p style="margin:0">Nivel: <strong id="tqNivel">50%</strong></p>
+      <p class="tq-estado ok" id="tqEstado" aria-live="polite">✅ Nivel normal</p>
+      <label for="tqSensor">Simular sensor de nivel</label>
+      <input type="range" id="tqSensor" min="0" max="100" value="50">
+    </div>
+  </div>
+  <div class="tabs">
+    <div role="tablist" aria-label="Código del panel">
+      <button role="tab" type="button" aria-selected="true">app.js</button>
+      <button role="tab" type="button" aria-selected="false">misma lógica en Python</button>
+    </div>
+    <div role="tabpanel"><div class="code" data-lang="js" data-title="js/app.js"><textarea hidden>
+// Umbrales del sistema (constantes: no cambian)
+const NIVEL_MIN = 20;
+const NIVEL_MAX = 90;
+
+// 1) BUSCAR los elementos del panel
+const sensor   = document.querySelector("#sensor");
+const agua     = document.querySelector("#agua");
+const nivelTxt = document.querySelector("#nivel-txt");
+const estado   = document.querySelector("#estado");
+
+// Función que actualiza el panel según el nivel (0 a 100)
+function actualizarPanel(nivel) {
+  agua.style.height = nivel + "%";     // sube o baja el agua dibujada
+  nivelTxt.textContent = nivel + "%";  // muestra el número
+
+  if (nivel < NIVEL_MIN) {
+    estado.textContent = "⚠️ Nivel bajo: bomba ENCENDIDA";
+    estado.className = "estado alerta";
+  } else if (nivel > NIVEL_MAX) {
+    estado.textContent = "🛑 Tanque lleno: bomba APAGADA";
+    estado.className = "estado lleno";
+  } else {
+    estado.textContent = "✅ Nivel normal";
+    estado.className = "estado ok";
+  }
+}
+
+// 2) ESCUCHAR: cada vez que se mueve el deslizador...
+sensor.addEventListener("input", () => {
+  // 3) REACCIONAR. Number() convierte el texto "45" en el número 45
+  actualizarPanel(Number(sensor.value));
+});
+
+actualizarPanel(Number(sensor.value));  // dibujamos el estado inicial
+</textarea></div></div>
+    <div role="tabpanel" hidden><div class="code" data-lang="py" data-title="panel.py"><textarea hidden>
+# La MISMA lógica, en el Python que ya conocés
+NIVEL_MIN = 20
+NIVEL_MAX = 90
+
+def actualizar_panel(nivel):
+    if nivel < NIVEL_MIN:
+        print("Nivel bajo: bomba ENCENDIDA")
+        # con pyFirmata: rele.write(1)
+    elif nivel > NIVEL_MAX:
+        print("Tanque lleno: bomba APAGADA")
+        # con pyFirmata: rele.write(0)
+    else:
+        print("Nivel normal")
+
+actualizar_panel(15)
+</textarea></div></div>
+  </div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>
+    <ol>
+      <li>Adaptá el panel a tu proyecto: temperatura del invernadero, humedad del suelo, luz, lo que mida tu sensor.</li>
+      <li>Cambiá los umbrales y los mensajes.</li>
+      <li><strong>Nivel pro:</strong> agregá un tercer estado "precaución" entre 20 y 35.</li>
+    </ol>
+  </div>
+  <div class="tip"><strong>💡 Consola = tu monitor serie</strong><code>F12</code> → pestaña Console. Si algo no anda, casi siempre hay un error en rojo que te dice la línea. Con <code>console.log(nivel)</code> espiás cualquier variable.</div>
+  <button class="cumplida" type="button" data-m="m7"></button>
+</section>
+
+<!-- ================= LAB ================= -->
+<section class="mision" id="lab">
+  <div class="mision-head"><span class="num">🧪</span><div class="t"><h2>Laboratorio en vivo</h2><small>Editá y mirá el resultado al instante</small></div></div>
+  <p class="prosa">Zona libre para experimentar sin miedo. Cambiá colores, textos, tamaños. Si se rompe, "Restaurar" lo deja como nuevo.</p>
+  <div class="lab">
+    <div class="lab-ed">
+      <div><label for="pgHtml">HTML</label><textarea id="pgHtml" spellcheck="false">
+<div class="tarjeta">
+  <span class="icono">🌱</span>
+  <h2>Invernadero Austral</h2>
+  <p>Humedad del suelo: <strong>48%</strong></p>
+  <a class="boton" href="#">Ver proyecto</a>
+</div></textarea></div>
+      <div><label for="pgCss">CSS</label><textarea id="pgCss" spellcheck="false">
+:root { --acento: #00e38c; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #0b1020;
+  font-family: system-ui, sans-serif;
+}
+
+.tarjeta {
+  width: min(90%, 20rem);
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: #141b33;
+  color: #e8eefc;
+  border: 2px solid var(--acento);
+}
+
+.icono { font-size: 3rem; }
+h2 { color: var(--acento); margin: .5rem 0; }
+
+.boton {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: .7rem 1.2rem;
+  border-radius: 99px;
+  background: var(--acento);
+  color: #04140c;
+  text-decoration: none;
+  font-weight: 700;
+}</textarea></div>
+    </div>
+    <iframe id="pgFrame" title="Resultado del laboratorio" sandbox=""></iframe>
+    <div class="lab-acc"><button class="btn sec" type="button" id="pgReset">↺ Restaurar</button></div>
+  </div>
+  <div class="desafio"><strong>🎯 Retos rápidos del laboratorio</strong>
+    <ol>
+      <li>Cambiá <code>--acento</code> a <code>#00c8ff</code>. ¿Cuántas cosas cambiaron con una sola línea?</li>
+      <li>Hacé que el botón se agrande al pasar el mouse con <code>.boton:hover { transform: scale(1.1); }</code></li>
+      <li>Copiá la tarjeta dos veces más y envolvé las tres en un <code>&lt;div class="grilla"&gt;</code> con el truco 3.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= M8 ================= -->
+<section class="mision" id="m8">
+  <div class="mision-head"><span class="num">M8</span><div class="t"><h2>Plantilla Expo: todo junto</h2><small>≈ 60 min · integración</small></div></div>
+  <p class="prosa">Esta es una web completa de ejemplo, lista para adaptar. Tiene todo lo que aprendiste: semántica, variables, grilla mágica, container queries, tema claro/oscuro y el panel en JS.</p>
+  <div class="tabs">
+    <div role="tablist" aria-label="Archivos de la plantilla">
+      <button role="tab" type="button" aria-selected="true">index.html</button>
+      <button role="tab" type="button" aria-selected="false">css/estilos.css</button>
+      <button role="tab" type="button" aria-selected="false">js/app.js</button>
+    </div>
+
+    <div role="tabpanel"><div class="code" data-lang="html" data-title="index.html"><textarea hidden>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AquaControl · Expotécnica</title>
+  <meta name="description" content="Monitoreo del tanque de agua con Arduino y Python.">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <!-- ===== CABECERA ===== -->
+  <header class="cabecera">
+    <a class="logo" href="#inicio">💧 AquaControl</a>
+    <nav class="menu">
+      <a href="#problema">Problema</a>
+      <a href="#funciona">Cómo funciona</a>
+      <a href="#panel">Panel</a>
+      <a href="#equipo">Equipo</a>
+    </nav>
+    <button id="btn-tema" class="btn-tema" type="button" aria-label="Cambiar tema">🌓</button>
+  </header>
+
+  <main>
+    <!-- ===== PORTADA ===== -->
+    <section id="inicio" class="hero">
+      <div>
+        <p class="etiqueta">Expotécnica · 3° ACPI · EI N°9</p>
+        <h1>El agua del tanque, bajo control</h1>
+        <p>Un sensor mide el nivel, el Arduino lo lee y Python decide cuándo prender la bomba.</p>
+        <a class="boton" href="#panel">Ver el panel en vivo</a>
+      </div>
+      <!-- Reemplazá por la foto de TU prototipo -->
+      <img src="img/prototipo.jpg" alt="Maqueta del tanque con el sensor en la tapa" width="800" height="600">
+    </section>
+
+    <!-- ===== PROBLEMA ===== -->
+    <section id="problema">
+      <h2>El problema</h2>
+      <p>En muchas casas de El Calafate el tanque se vacía sin aviso o rebalsa, y se desperdicia agua. Nadie se entera hasta que abre la canilla.</p>
+    </section>
+
+    <!-- ===== CÓMO FUNCIONA ===== -->
+    <section id="funciona">
+      <h2>Cómo funciona</h2>
+      <div class="grilla">
+        <article class="tarjeta">
+          <div class="tarjeta-in">
+            <span class="icono">📡</span>
+            <div><h3>1. Sensor</h3><p>El HC-SR04 mide la distancia hasta el agua.</p></div>
+          </div>
+        </article>
+        <article class="tarjeta">
+          <div class="tarjeta-in">
+            <span class="icono">🧠</span>
+            <div><h3>2. Arduino</h3><p>Lee el sensor y envía el dato por USB con Firmata.</p></div>
+          </div>
+        </article>
+        <article class="tarjeta">
+          <div class="tarjeta-in">
+            <span class="icono">🐍</span>
+            <div><h3>3. Python</h3><p>Decide y activa el relé que prende la bomba.</p></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== PANEL (JS) ===== -->
+    <section id="panel">
+      <h2>Panel en vivo</h2>
+      <div class="panel">
+        <div class="tanque"><div id="agua" class="agua"></div></div>
+        <div>
+          <p>Nivel: <strong id="nivel-txt">50%</strong></p>
+          <p id="estado" class="estado ok">✅ Nivel normal</p>
+          <label for="sensor">Simular sensor</label>
+          <input type="range" id="sensor" min="0" max="100" value="50">
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MATERIALES ===== -->
+    <section id="materiales">
+      <h2>Materiales</h2>
+      <ul class="lista">
+        <li>Arduino UNO</li>
+        <li>Sensor ultrasónico HC-SR04</li>
+        <li>Módulo relé + bomba 12 V</li>
+        <li>Python + pyFirmata</li>
+        <li>HTML, CSS y JavaScript</li>
+      </ul>
+    </section>
+
+    <!-- ===== EQUIPO ===== -->
+    <section id="equipo">
+      <h2>Equipo</h2>
+      <div class="grilla">
+        <article class="tarjeta persona">
+          <div class="avatar">👩‍🔧</div>
+          <h3>Nombre Apellido</h3>
+          <p>Hardware y conexiones</p>
+        </article>
+        <article class="tarjeta persona">
+          <div class="avatar">👨‍💻</div>
+          <h3>Nombre Apellido</h3>
+          <p>Programación en Python</p>
+        </article>
+        <article class="tarjeta persona">
+          <div class="avatar">🎨</div>
+          <h3>Nombre Apellido</h3>
+          <p>Web y documentación</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p>Escuela Industrial N°9 "15 de Noviembre" · El Calafate · <span id="anio"></span></p>
+  </footer>
+
+</body>
+</html>
+</textarea></div></div>
+
+    <div role="tabpanel" hidden><div class="code" data-lang="css" data-title="css/estilos.css"><textarea hidden>
+/* =========================================================
+   ESTILOS · Web del proyecto Expotécnica
+   Mobile first: primero el celular, después pantallas grandes
+   ========================================================= */
+
+/* 1) VARIABLES: la paleta de tu proyecto */
+:root {
+  --fondo: #0b1020;
+  --superficie: #141b33;
+  --texto: #e8eefc;
+  --texto-suave: #9aa6c4;
+  --acento: #00c8ff;
+  --ok: #00e38c;
+  --alerta: #ff4d6d;
+  --radio: 14px;
+  --espacio: clamp(1rem, 3vw, 2rem);  /* espacio que crece con la pantalla */
+  color-scheme: dark;
+}
+
+/* Tema claro: lo activa el botón 🌓 desde app.js */
+[data-tema="claro"] {
+  --fondo: #f3f6fb;
+  --superficie: #ffffff;
+  --texto: #10182b;
+  --texto-suave: #4b5870;
+  --acento: #0077b6;
+  color-scheme: light;
+}
+
+/* 2) BASE */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radio);
+}
+
+/* 3) CABECERA pegada arriba, armada con grid-template-areas */
+.cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "logo tema"
+    "menu menu";          /* en el celu: el menú va en su propia fila */
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem var(--espacio);
+  background: color-mix(in srgb, var(--fondo) 85%, transparent);
+  backdrop-filter: blur(10px);  /* efecto vidrio esmerilado */
+  border-bottom: 1px solid color-mix(in srgb, var(--acento) 30%, transparent);
+}
+
+.logo {
+  grid-area: logo;
+  font-weight: 800;
+  color: var(--texto);
+  text-decoration: none;
+}
+
+.menu {
+  grid-area: menu;
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;      /* si no entra, se desliza con el dedo */
+}
+
+.menu a {
+  color: var(--texto-suave);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.menu a:hover { color: var(--acento); }
+
+.btn-tema {
+  grid-area: tema;
+  border: 1px solid var(--texto-suave);
+  background: transparent;
+  color: var(--texto);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+}
+
+/* 4) CONTENIDO */
+main {
+  max-width: 70rem;
+  margin-inline: auto;
+  padding-inline: var(--espacio);
+}
+
+section {
+  padding-block: clamp(2.5rem, 8vw, 5rem);
+  scroll-margin-top: 6rem;   /* que la cabecera no tape el título */
+}
+
+h1 {
+  font-size: clamp(2rem, 7vw, 3.75rem);
+  line-height: 1.1;
+  margin: 0.5rem 0 1rem;
+}
+
+h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
+
+.etiqueta { color: var(--acento); font-weight: 700; }
+
+.boton {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  background: var(--acento);
+  color: #06101f;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.boton:hover { transform: translateY(-3px); }
+
+.hero {
+  display: grid;
+  gap: var(--espacio);
+  align-items: center;
+}
+
+/* 5) GRILLA MÁGICA: se acomoda sola */
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--espacio);
+}
+
+.tarjeta {
+  container-type: inline-size;  /* la tarjeta se mide a sí misma */
+  background: var(--superficie);
+  border: 1px solid color-mix(in srgb, var(--acento) 20%, transparent);
+  border-radius: var(--radio);
+  padding: 1.25rem;
+}
+
+.tarjeta-in { display: grid; gap: 0.75rem; }
+
+.icono { font-size: 2.5rem; }
+
+@container (min-width: 22rem) {
+  .tarjeta-in { grid-template-columns: auto 1fr; align-items: start; }
+}
+
+.tarjeta h3 { margin: 0; }
+.tarjeta p  { margin: 0.25rem 0 0; color: var(--texto-suave); }
+
+/* 6) PANEL DEL TANQUE */
+.panel {
+  display: grid;
+  gap: var(--espacio);
+  background: var(--superficie);
+  border-radius: var(--radio);
+  padding: var(--espacio);
+}
+
+.tanque {
+  position: relative;
+  width: min(100%, 9rem);
+  height: 14rem;
+  margin-inline: auto;
+  border: 3px solid var(--texto-suave);
+  border-top: none;
+  border-radius: 0 0 var(--radio) var(--radio);
+  overflow: hidden;
+}
+
+.agua {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 50%;
+  background: linear-gradient(var(--acento), #0050a0);
+  transition: height 0.4s ease;   /* el agua sube y baja suave */
+}
+
+.estado { padding: 0.6rem 1rem; border-radius: var(--radio); font-weight: 700; }
+.estado.ok     { background: color-mix(in srgb, var(--ok) 20%, transparent); }
+.estado.alerta { background: color-mix(in srgb, var(--alerta) 25%, transparent); }
+.estado.lleno  { background: color-mix(in srgb, var(--acento) 25%, transparent); }
+
+input[type="range"] { width: 100%; accent-color: var(--acento); }
+
+/* 7) MATERIALES Y EQUIPO */
+.lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 0.5rem 2rem;
+}
+
+.persona { text-align: center; }
+
+.avatar {
+  width: 6rem;
+  aspect-ratio: 1;           /* siempre cuadrado */
+  margin: 0 auto 0.75rem;
+  display: grid;
+  place-items: center;
+  font-size: 3rem;
+  border-radius: 50%;
+  background: var(--fondo);
+}
+
+.pie {
+  text-align: center;
+  padding: 2rem var(--espacio);
+  color: var(--texto-suave);
+  border-top: 1px solid color-mix(in srgb, var(--acento) 20%, transparent);
+}
+
+/* 8) PANTALLAS GRANDES (desde 48rem ≈ 768px) */
+@media (min-width: 48rem) {
+  .cabecera {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "logo menu tema";   /* todo en una fila */
+  }
+  .menu { justify-content: flex-end; }
+  .hero  { grid-template-columns: 1.2fr 1fr; }
+  .panel { grid-template-columns: 10rem 1fr; align-items: center; }
+}
+
+/* 9) Accesibilidad: si la persona pidió menos animaciones */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</textarea></div></div>
+
+    <div role="tabpanel" hidden><div class="code" data-lang="js" data-title="js/app.js"><textarea hidden>
+// =========================================================
+// APP.JS · El cerebro de la web del proyecto
+// =========================================================
+
+// ---------- 1) TEMA CLARO / OSCURO ----------
+const html = document.documentElement;          // la etiqueta <html>
+const btnTema = document.querySelector("#btn-tema");
+
+// Si la persona ya eligió un tema antes, lo recordamos
+const temaGuardado = localStorage.getItem("tema");
+if (temaGuardado) {
+  html.dataset.tema = temaGuardado;              // pone data-tema="claro"
+}
+
+btnTema.addEventListener("click", () => {
+  const nuevo = html.dataset.tema === "claro" ? "oscuro" : "claro";
+  html.dataset.tema = nuevo;
+  localStorage.setItem("tema", nuevo);           // lo guardamos en el navegador
+});
+
+// ---------- 2) PANEL DEL TANQUE ----------
+const NIVEL_MIN = 20;
+const NIVEL_MAX = 90;
+
+const sensor   = document.querySelector("#sensor");
+const agua     = document.querySelector("#agua");
+const nivelTxt = document.querySelector("#nivel-txt");
+const estado   = document.querySelector("#estado");
+
+function actualizarPanel(nivel) {
+  agua.style.height = nivel + "%";
+  nivelTxt.textContent = nivel + "%";
+
+  if (nivel < NIVEL_MIN) {
+    estado.textContent = "⚠️ Nivel bajo: bomba ENCENDIDA";
+    estado.className = "estado alerta";
+  } else if (nivel > NIVEL_MAX) {
+    estado.textContent = "🛑 Tanque lleno: bomba APAGADA";
+    estado.className = "estado lleno";
+  } else {
+    estado.textContent = "✅ Nivel normal";
+    estado.className = "estado ok";
+  }
+}
+
+sensor.addEventListener("input", () => {
+  actualizarPanel(Number(sensor.value));
+});
+
+actualizarPanel(Number(sensor.value));
+
+// ---------- 3) AÑO AUTOMÁTICO EN EL PIE ----------
+document.querySelector("#anio").textContent = new Date().getFullYear();
+</textarea></div></div>
+  </div>
+  <div class="desafio"><strong>🎯 La misión grande</strong>
+    <ol>
+      <li>Copiá los 3 archivos en tu carpeta <code>proyecto-expo</code>.</li>
+      <li>Cambiá TODO el contenido por el de tu proyecto: nombre, problema, las 3 etapas, materiales y equipo.</li>
+      <li>Elegí tu paleta en <code>:root</code>.</li>
+      <li>Adaptá el panel a lo que mide tu sensor.</li>
+      <li>Probala en el celu de un compañero. Si él entiende tu proyecto en 30 segundos, ganaste.</li>
+    </ol>
+  </div>
+  <div class="tip"><strong>💡 Próximo nivel</strong>Hoy el panel usa un deslizador. Más adelante vamos a hacer que Python mande los datos reales del Arduino a la web. Lo que armaste hoy es la pantalla de un SCADA de verdad.</div>
+  <button class="cumplida" type="button" data-m="m8"></button>
+</section>
+
+<!-- ================= M9 ================= -->
+<section class="mision bonus" id="m9">
+  <div class="mision-head"><span class="num">M9</span><div class="t"><h2>Bonus: publicala en internet</h2><small>≈ 15 min · GitHub Pages</small></div></div>
+  <p class="prosa">Con la web publicada, podés imprimir un QR en el stand y cualquiera la abre desde su celular.</p>
+  <ol class="prosa">
+    <li>Creá una cuenta en <strong>github.com</strong> (con el mail del grupo).</li>
+    <li>Botón <strong>New repository</strong> → nombre: <code>aquacontrol</code> → Public → Create.</li>
+    <li>"uploading an existing file" → arrastrá <strong>el contenido</strong> de tu carpeta (no la carpeta) → Commit changes.</li>
+    <li><strong>Settings → Pages</strong> → Branch: <code>main</code> → Save.</li>
+    <li>Esperá 1 o 2 minutos. Tu web queda en <code>https://tu-usuario.github.io/aquacontrol</code></li>
+  </ol>
+  <div class="ojo"><strong>⚠️ Chequeo antes de subir</strong>El archivo principal tiene que llamarse exactamente <code>index.html</code>, en minúsculas. Y ojo con los datos personales: nombres sí, teléfonos o direcciones no.</div>
+  <div class="desafio"><strong>🎯 Mini-desafío</strong>Publicá tu web y generá un código QR con el link. Probalo con tu celular.</div>
+  <button class="cumplida" type="button" data-m="m9"></button>
+</section>
+
+<!-- ================= CIERRE ================= -->
+<section class="mision" id="cierre">
+  <div class="mision-head"><span class="num">🏁</span><div class="t"><h2>Cierre de la misión</h2><small>Glosario + checklist para la Expo</small></div></div>
+  <p class="prosa">¡Muy buen trabajo! Pasaron de una página en blanco a una web responsiva con un panel interactivo. Sumá estas palabras a tu glosario técnico personal.</p>
+  <dl class="glosario">
+    <div><dt>Etiqueta</dt><dd>Instrucción de HTML que envuelve contenido: <code>&lt;p&gt;...&lt;/p&gt;</code>.</dd></div>
+    <div><dt>HTML semántico</dt><dd>Usar etiquetas con significado: header, main, section, footer.</dd></div>
+    <div><dt>Selector</dt><dd>La parte de CSS que dice a qué elementos se aplica una regla.</dd></div>
+    <div><dt>Variable CSS</dt><dd>Un valor con nombre (<code>--acento</code>) que se reutiliza en toda la hoja.</dd></div>
+    <div><dt>Modelo de caja</dt><dd>Contenido + padding + border + margin.</dd></div>
+    <div><dt>Responsive</dt><dd>Diseño que se adapta a cualquier tamaño de pantalla.</dd></div>
+    <div><dt>Mobile first</dt><dd>Diseñar primero para el celular y después ampliar.</dd></div>
+    <div><dt>Media / container query</dt><dd>Reglas que se activan según el ancho de la pantalla o de una caja.</dd></div>
+    <div><dt>DOM</dt><dd>El "mapa" de la página que JavaScript puede leer y modificar.</dd></div>
+    <div><dt>Evento</dt><dd>Algo que pasa (un clic, mover un deslizador) y dispara una reacción.</dd></div>
+  </dl>
+
+  <div class="ck-top"><h3 style="margin:1.2rem 0 0">✅ Checklist: web lista para la Expo</h3><b id="ckCuenta">0/10</b></div>
+  <ul id="checklist">
+    <li><label><input type="checkbox" id="c1"><span>La carpeta está ordenada y los nombres no tienen espacios ni tildes.</span></label></li>
+    <li><label><input type="checkbox" id="c2"><span>Tiene el <code>meta viewport</code> y <code>lang="es"</code>.</span></label></li>
+    <li><label><input type="checkbox" id="c3"><span>Usa header, nav, main, section y footer.</span></label></li>
+    <li><label><input type="checkbox" id="c4"><span>Explica el problema real en pocas oraciones claras.</span></label></li>
+    <li><label><input type="checkbox" id="c5"><span>Tiene foto del prototipo con <code>alt</code> descriptivo.</span></label></li>
+    <li><label><input type="checkbox" id="c6"><span>Usa variables de color con la paleta del proyecto.</span></label></li>
+    <li><label><input type="checkbox" id="c7"><span>Se ve bien a 360 px, sin scroll horizontal.</span></label></li>
+    <li><label><input type="checkbox" id="c8"><span>Tiene al menos una interacción con JavaScript.</span></label></li>
+    <li><label><input type="checkbox" id="c9"><span>La consola (F12) no muestra errores en rojo.</span></label></li>
+    <li><label><input type="checkbox" id="c10"><span>Aparecen el equipo, la escuela y el año.</span></label></li>
+  </ul>
+  <p id="ckMsg" aria-live="polite"></p>
+  <div class="tip"><strong>🚀 Próxima misión</strong>Conectar la web con el hardware real: Python lee el Arduino con pyFirmata y la página muestra el dato en vivo. Tu panel está a un paso de ser un SCADA.</div>
+</section>
+
+</main>
+
+<footer>
+  Prof. Pablo Limardo – Jefatura ACPI · Escuela Industrial N°9 "15 de Noviembre" · El Calafate, Santa Cruz
+</footer>
+
+<script>
+(() => {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  /* ---------- Tema ---------- */
+  const root = document.documentElement;
+  const tema = store.get('guia-tema', null);
+  if (tema === 'light' || tema === 'dark') root.dataset.theme = tema;
+  $('#btnTema').addEventListener('click', () => {
+    const oscuro = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    const nuevo = oscuro ? 'light' : 'dark';
+    root.dataset.theme = nuevo;
+    store.set('guia-tema', nuevo);
+  });
+
+  /* ---------- Progreso de lectura ---------- */
+  const barra = $('#progresoBarra');
+  const prog = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    barra.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  };
+  addEventListener('scroll', prog, { passive: true });
+  prog();
+
+  /* ---------- Resaltado de código ---------- */
+  const RULES = {
+    html: [['com', /<!--[\s\S]*?-->/], ['tag', /<\/?[a-zA-Z][\w-]*|\/?>/], ['str', /"[^"\n]*"/], ['attr', /\b[a-z-]+(?==)/]],
+    css: [['com', /\/\*[\s\S]*?\*\//], ['str', /"[^"\n]*"/], ['kw', /@[\w-]+/], ['prop', /--[\w-]+(?=\s*:\s)|\b[a-z-]+(?=\s*:\s)/], ['num', /#[0-9a-fA-F]{3,8}\b|\b\d*\.?\d+(?:px|rem|em|%|fr|vw|vh|cqi|s|ms|deg|ch)?/]],
+    js: [['com', /\/\/[^\n]*|\/\*[\s\S]*?\*\//], ['str', /"[^"\n]*"|'[^'\n]*'|`[^`]*`/], ['kw', /\b(?:const|let|var|function|if|else|return|for|of|in|new|true|false|null|document|localStorage)\b/], ['num', /\b\d+(?:\.\d+)?\b/]],
+    py: [['com', /#[^\n]*/], ['str', /"[^"\n]*"|'[^'\n]*'/], ['kw', /\b(?:def|if|elif|else|return|for|in|import|from|print|True|False|None|while)\b/], ['num', /\b\d+(?:\.\d+)?\b/]]
+  };
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  function hl(code, lang) {
+    const rules = RULES[lang];
+    if (!rules) return esc(code);
+    const re = new RegExp(rules.map(r => '(' + r[1].source + ')').join('|'), 'g');
+    let out = '', last = 0, m;
+    while ((m = re.exec(code))) {
+      if (m[0] === '') { re.lastIndex++; continue; }
+      out += esc(code.slice(last, m.index));
+      const i = m.slice(1).findIndex(x => x !== undefined);
+      out += '<span class="t-' + rules[i][0] + '">' + esc(m[0]) + '</span>';
+      last = re.lastIndex;
+    }
+    return out + esc(code.slice(last));
+  }
+  async function copiar(txt, btn) {
+    let ok = false;
+    try { await navigator.clipboard.writeText(txt); ok = true; }
+    catch (e) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        ok = document.execCommand('copy'); ta.remove();
+      } catch (e2) {}
+    }
+    btn.textContent = ok ? '¡Copiado! ✔' : 'Seleccioná y copiá';
+    setTimeout(() => { btn.textContent = 'Copiar'; }, 1600);
+  }
+  $$('.code').forEach(box => {
+    const src = $('textarea', box);
+    if (!src) return;
+    const code = src.value.replace(/^\n+/, '').replace(/\s+$/, '');
+    const lang = box.dataset.lang || 'txt';
+    box.innerHTML = '<div class="code-bar"><span>' + esc(box.dataset.title || lang) + '</span><button class="copiar" type="button">Copiar</button></div><pre><code>' + hl(code, lang) + '</code></pre>';
+    $('.copiar', box).addEventListener('click', e => copiar(code, e.currentTarget));
+  });
+
+  /* ---------- Pestañas ---------- */
+  $$('.tabs').forEach(t => {
+    const btns = $$(':scope > [role="tablist"] > [role="tab"]', t);
+    const panels = $$(':scope > [role="tabpanel"]', t);
+    btns.forEach((b, i) => b.addEventListener('click', () => {
+      btns.forEach((x, j) => { x.setAttribute('aria-selected', String(i === j)); panels[j].hidden = i !== j; });
+    }));
+  });
+
+  /* ---------- XP ---------- */
+  const hechas = new Set(store.get('guia-xp', []));
+  const niveles = [[0, 'Aprendiz 🔧'], [300, 'Maquetador/a 🧱'], [600, 'Diseñador/a web 🎨'], [900, 'Dev Expo 🚀']];
+  function pintarXP() {
+    const xp = hechas.size * 100;
+    let nombre = niveles[0][1];
+    niveles.forEach(([min, n]) => { if (xp >= min) nombre = n; });
+    $('#xpNum').textContent = xp;
+    $('#xpNivel').textContent = nombre;
+    $('#xpBarra').style.width = Math.min(100, xp / 10) + '%';
+    $$('.cumplida').forEach(b => {
+      const on = hechas.has(b.dataset.m);
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', String(on));
+      b.textContent = on ? '✔ Misión cumplida · +100 XP' : '☐ Marcar misión cumplida';
+    });
+  }
+  $$('.cumplida').forEach(b => b.addEventListener('click', () => {
+    const m = b.dataset.m;
+    if (hechas.has(m)) hechas.delete(m); else hechas.add(m);
+    store.set('guia-xp', [...hechas]);
+    pintarXP();
+  }));
+  pintarXP();
+
+  /* ---------- Tablero de capas ---------- */
+  const demo = $('#demo');
+  const capaTxt = $('#capaTxt');
+  const demoBtn = $('.demo-btn', demo);
+  const demoMsg = $('.demo-msg', demo);
+  let bomba = false;
+  function textoCapa() {
+    const css = demo.dataset.css === '1', js = demo.dataset.js === '1';
+    if (!css && !js) capaTxt.textContent = 'Solo HTML: el contenido está, pero parece un documento de 1995.';
+    else if (css && !js) capaTxt.textContent = 'HTML + CSS: ahora se ve profesional. Tocá el botón... ¿hace algo?';
+    else if (!css && js) capaTxt.textContent = 'HTML + JS: el botón funciona, pero el diseño sigue siendo feo.';
+    else capaTxt.textContent = '¡Sistema completo! Estructura, diseño y cerebro trabajando juntos.';
+  }
+  $$('.sw').forEach(sw => sw.addEventListener('click', () => {
+    const k = sw.dataset.k;
+    if (k === 'html') return;
+    const on = demo.dataset[k] === '1' ? '0' : '1';
+    demo.dataset[k] = on;
+    sw.setAttribute('aria-pressed', String(on === '1'));
+    if (k === 'js' && on === '0') {
+      bomba = false; demoBtn.textContent = 'Encender bomba'; demoMsg.textContent = ''; $('.demo-card', demo).classList.remove('bomba-on');
+    }
+    textoCapa();
+  }));
+  demoBtn.addEventListener('click', () => {
+    if (demo.dataset.js !== '1') { demoMsg.textContent = '…no pasa nada. Sin JavaScript el botón es de adorno 😴'; return; }
+    bomba = !bomba;
+    demoMsg.textContent = bomba ? '✅ Bomba ENCENDIDA: el tanque se está llenando' : '⏹ Bomba APAGADA';
+    demoBtn.textContent = bomba ? 'Apagar bomba' : 'Encender bomba';
+    $('.demo-card', demo).classList.toggle('bomba-on', bomba);
+  });
+  textoCapa();
+
+  /* ---------- Simulador responsive ---------- */
+  const marco = $('#simMarco'), rango = $('#simAncho'), out = $('#simOut');
+  const setAncho = v => { marco.style.width = v + 'px'; rango.value = v; };
+  rango.addEventListener('input', () => setAncho(rango.value));
+  $$('[data-ancho]').forEach(b => b.addEventListener('click', () => setAncho(b.dataset.ancho)));
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(entries => {
+      const w = Math.round(entries[0].contentRect.width);
+      const modo = w < 480 ? '📱 celular' : w < 768 ? '📟 tablet' : '🖥️ compu';
+      out.textContent = w + 'px · ' + modo;
+    }).observe(marco);
+  }
+
+  /* ---------- Tanque demo ---------- */
+  const tqS = $('#tqSensor'), tqA = $('#tqAgua'), tqN = $('#tqNivel'), tqE = $('#tqEstado');
+  function tanque(n) {
+    tqA.style.height = n + '%';
+    tqN.textContent = n + '%';
+    if (n < 20) { tqE.textContent = '⚠️ Nivel bajo: bomba ENCENDIDA'; tqE.className = 'tq-estado alerta'; }
+    else if (n > 90) { tqE.textContent = '🛑 Tanque lleno: bomba APAGADA'; tqE.className = 'tq-estado lleno'; }
+    else { tqE.textContent = '✅ Nivel normal'; tqE.className = 'tq-estado ok'; }
+  }
+  tqS.addEventListener('input', () => tanque(Number(tqS.value)));
+  tanque(Number(tqS.value));
+
+  /* ---------- Laboratorio ---------- */
+  const pgH = $('#pgHtml'), pgC = $('#pgCss'), pgF = $('#pgFrame');
+  const iniH = pgH.value, iniC = pgC.value;
+  let tmr;
+  const render = () => {
+    pgF.srcdoc = '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>' + pgC.value + '</style></head><body>' + pgH.value + '</body></html>';
+  };
+  [pgH, pgC].forEach(t => t.addEventListener('input', () => { clearTimeout(tmr); tmr = setTimeout(render, 300); }));
+  $('#pgReset').addEventListener('click', () => { pgH.value = iniH; pgC.value = iniC; render(); });
+  render();
+
+  /* ---------- Checklist ---------- */
+  const ck = store.get('guia-check', {});
+  const cajas = $$('#checklist input');
+  function contar() {
+    const n = cajas.filter(i => i.checked).length;
+    $('#ckCuenta').textContent = n + '/' + cajas.length;
+    $('#ckMsg').textContent = n === cajas.length ? '🏆 ¡Tu web está lista para la Expo!' : '';
+  }
+  cajas.forEach(i => {
+    i.checked = !!ck[i.id];
+    i.addEventListener('change', () => { ck[i.id] = i.checked; store.set('guia-check', ck); contar(); });
+  });
+  contar();
+})();
+</script>
+</body>
+</html>
